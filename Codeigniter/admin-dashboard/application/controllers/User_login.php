@@ -52,18 +52,51 @@ class User_login extends CI_Controller
 
 			$user_created = $this->Database_queries->create_user($new_user_details);
 
-			if ($user_created === 'User Already Exists') {
+			if ($user_created === true || $user_created === 1) {
+				$data['message'] = 'Account Created Successfully';
+				$data['class'] = 'alert-success';
+			} else {
 				$data['message'] = $user_created;
 				$data['class'] = 'alert-danger';
-			} else {
-				$data['message'] = 'User Added Successfully';
-				$data['class'] = 'alert-success';
 			}
 		} else {
 			$errors = $this->form_validation->error_array();
 			$errorsKeys = array_keys($errors);
 			$data['message']	= $errors[$errorsKeys[0]];
 			$data['class']		= 'alert-danger';
+		}
+
+		echo json_encode($data);
+	}
+
+	public function login()
+	{
+		$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+		$this->form_validation->set_rules('password', 'Password', 'required');
+
+		if ($this->form_validation->run()) {
+			$login_details = array(
+				'email' 	=>	$this->input->post('email'),
+				'password'	=>	$this->input->post('password')
+			);
+			$can_login = $this->Database_queries->login($login_details);
+			if ($can_login === true || $can_login === 1) {
+				$user_session = array(
+					'email'	=>	$this->input->post('email'),
+				);
+				$this->session->set_userdata($user_session);
+				$data['message'] = 'Login Successful';
+				$data['class'] = 'alert-success';
+				$data['redirect'] = 'Dashboard';
+			} else {
+				$data['message'] = $can_login;
+				$data['class'] = 'alert-danger';
+			}
+		} else {
+			$errors = $this->form_validation->error_array();
+			$errorsKeys = array_keys($errors);
+			$data['message'] = $errors[$errorsKeys[0]];
+			$data['class'] = 'alert-danger';
 		}
 
 		echo json_encode($data);

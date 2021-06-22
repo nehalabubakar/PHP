@@ -11,7 +11,7 @@ class Database_queries extends CI_Model
             $this->db->insert('users', $new_user_details);
             return true;
         } else {
-            $error = 'User Already Exists';
+            $error = 'Account Already Exists Please Login To Continue';
             return $error;
         }
     }
@@ -33,5 +33,21 @@ class Database_queries extends CI_Model
         $this->db->select('id');
         $this->db->where('user_role', $user_role);
         return $this->db->get('user_role')->row()->id;
+    }
+
+    public function login($login_details)
+    {
+        $this->db->select('password');
+        $this->db->where('email', $login_details['email']);
+        if ($this->db->get('users')->num_rows() > 0) {
+            $decrypted_password = $this->encryption->decrypt($this->db->get('users')->row()->password);
+            if ($login_details['password'] == $decrypted_password) {
+                return true;
+            } else {
+                return 'Password Incorrect';
+            }
+        } else {
+            return "Email Doesnot Exists";
+        }
     }
 }

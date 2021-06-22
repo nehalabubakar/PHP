@@ -6,13 +6,14 @@
         <div class="login_wrapper">
             <div class="animate form login_form">
                 <section class="login_content">
-                    <form>
+                    <form action="<?php echo base_url(); ?>User_login/login" id="user_login">
                         <h1>Login Form</h1>
+                        <div class="notification"></div>
                         <div>
-                            <input type="text" class="form-control" placeholder="Username" required="" />
+                            <input type="email" class="form-control" placeholder="Email" name="email" required />
                         </div>
                         <div>
-                            <input type="password" class="form-control" placeholder="Password" required="" />
+                            <input type="password" class="form-control" placeholder="Password" name="password" required />
                         </div>
                         <div>
                             <button class="btn btn-default submit" type="submit">Log In</button>
@@ -107,6 +108,10 @@
 
                 if (data.class == 'alert-success') {
                     $('form#' + form_id)[0].reset();
+                }
+
+                if (typeof data.redirect !== 'undefined' && data.redirect !== null) {
+                    window.location.href = '<?php echo base_url(); ?>' + data.redirect;
                 }
             }
         })
