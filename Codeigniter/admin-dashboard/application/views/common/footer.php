@@ -50,6 +50,44 @@
 <!-- Custom Theme Scripts -->
 <script src="<?php echo base_url(); ?>assets/build/js/custom.min.js"></script>
 
+<script>
+    $('form').submit(function(e) {
+        e.preventDefault();
+        var form_id = $(this).attr('id');
+        var submit_button_text = $('form#' + form_id + ' input[type = "submit"]').val();
+        $.ajax({
+            url: $(this).attr('action'),
+            data: new FormData($('form#' + form_id)[0]),
+            type: 'POST',
+            dataType: 'JSON',
+            processData: false,
+            contentType: false,
+            beforeSend: function() {
+                $('form#' + form_id + ' button[type = "submit"]').append(' <i class="fa fa-spinner fa-spin"></i>');
+                $('form#' + form_id + ' input[type = "submit"]').val('Sending...');
+                $('form#' + form_id + ' button[type = "submit"]').attr('disabled', 'true');
+                $('form#' + form_id + ' input[type = "submit"]').attr('disabled', 'true');
+            },
+            success: function(data) {
+                $('form#' + form_id + ' button[type = "submit"] .fa-spinner').remove();
+                $('form#' + form_id + ' input[type = "submit"]').val(submit_button_text);
+                $('form#' + form_id + ' button[type = "submit"]').removeAttr('disabled', 'false');
+                $('form#' + form_id + ' input[type = "submit"]').removeAttr('disabled', 'false');
+
+                $('form#' + form_id + ' .notification').html('<div id="message" class="alert ' + data.class + ' alert-dismissible">' + data.message);
+
+                if (data.class == 'alert-success') {
+                    $('form#' + form_id)[0].reset();
+                }
+
+                if (typeof data.redirect !== 'undefined' && data.redirect !== null) {
+                    window.location.href = '<?php echo base_url(); ?>' + data.redirect;
+                }
+            }
+        })
+    })
+</script>
+
 </body>
 
 </html>

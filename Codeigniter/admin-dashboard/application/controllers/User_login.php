@@ -81,8 +81,11 @@ class User_login extends CI_Controller
 			);
 			$can_login = $this->Database_queries->login($login_details);
 			if ($can_login === true || $can_login === 1) {
+				$session = $this->Database_queries->user_info($login_details['email']);
 				$user_session = array(
-					'email'	=>	$this->input->post('email'),
+					'email'	=>	$session['email'],
+					'name'	=>	$session['name'],
+					'user_role'	=>	$session['user_role'],
 				);
 				$this->session->set_userdata($user_session);
 				$data['message'] = 'Login Successful';

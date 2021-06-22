@@ -50,4 +50,18 @@ class Database_queries extends CI_Model
             return "Email Doesnot Exists";
         }
     }
+
+    public function user_info($session_email)
+    {
+        $this->db->select('user_role, name, email');
+        $this->db->join('user_role', 'user_role.id = users.user_role_id');
+        $this->db->where('email', $session_email);
+        foreach ($this->db->get('users')->result() as $user) {
+            return array(
+                'user_role' =>  $user->user_role,
+                'name'      =>  $user->name,
+                'email'     =>  $user->email,
+            );
+        }
+    }
 }

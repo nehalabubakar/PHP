@@ -37,4 +37,22 @@ class Dashboard extends CI_Controller
         $this->load->view('dashboard');
         $this->load->view('common/footer');
     }
+
+    public function dashboard_2()
+    {
+        $this->load->view('common/header');
+        $this->load->view('common/sidebar');
+        $this->load->view('common/top-navigation');
+        $this->load->view('dashboard-2');
+        $this->load->view('common/footer');
+    }
+
+    public function dashboard_3()
+    {
+        $this->load->view('common/header');
+        $this->load->view('common/sidebar');
+        $this->load->view('common/top-navigation');
+        $this->load->view('dashboard-3');
+        $this->load->view('common/footer');
+    }
 }
